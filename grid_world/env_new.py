@@ -275,7 +275,7 @@ def pos_update_func_local_agent(idx):
 
 def plan_from_response(response):
     # 使用正则表达式提取括号中的地点
-    pattern = r'UAV\d+\s*:\s*reach\s*\(([^)]+)\)'
+    pattern = r'Agent\d+\s*:\s*reach\s*\(([^)]+)\)'
     matches = re.findall(pattern, response)
     
     # 将提取的地点转换为计划

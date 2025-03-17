@@ -1,32 +1,30 @@
 import pandas as pd
 
-def update_difficulty_based_on_class2_acc(csv_path):
-    # 读取 CSV 文件
-    df = pd.read_csv(csv_path)
+def filter_hk_collisions(csv_path):
+    # 读取 CSV 文件，设置 low_memory=False 以避免 DtypeWarning
+    df = pd.read_csv(csv_path, low_memory=False)
     
-    # 计算 'Class 2 Acc' 列的中位数
-    median_value = df['Class 2 Acc'].median()
-    print(f"Median of 'Class 2 Acc': {median_value}")
+    # 筛选符合条件的行
+    filtered_df = df[
+        (df['longitude'] >= 114.130) & 
+        (df['longitude'] <= 114.230) & 
+        (df['latitude'] >= 22.295) & 
+        (df['latitude'] <= 22.345)
+    ]
     
-    # 创建一个新的 DataFrame，按 'Class 2 Acc' 列排序
-    sorted_df = df.sort_values(by='Class 2 Acc').reset_index()
+    # 只保留前十条记录
+    filtered_df = filtered_df.head(10)
     
-    # 计算中间索引
-    mid_index = len(sorted_df) // 2
+    # 输出保留的数据行数
+    print(f"Number of rows after filtering: {len(filtered_df)}")
     
-    # 前 50% 赋值为 'easy'
-    sorted_df.loc[:mid_index, 'difficulty'] = 'easy'
-    
-    # 后 50% 赋值为 'difficult'
-    sorted_df.loc[mid_index:, 'difficulty'] = 'difficult'
-    
-    # 将更新后的 'difficulty' 列赋值回原始 DataFrame
-    df['difficulty'] = sorted_df.set_index('index')['difficulty']
-    
-    # 保存更新后的数据到 CSV 文件
-    df.to_csv(csv_path, index=False)
-    print(f"Updated difficulty based on 'Class 2 Acc' and saved to {csv_path}")
+    # 保存筛选后的数据到 CSV 文件
+    filtered_df.to_csv(csv_path, index=False)
+    print(f"Filtered data saved to {csv_path}")
 
-# 使用函数更新数据
-csv_path = 'fire_data.csv'
-update_difficulty_based_on_class2_acc(csv_path)
+# 使用函数筛选数据
+csv_path = 'hk_collisions.csv'
+filter_hk_collisions(csv_path)
+
+
+

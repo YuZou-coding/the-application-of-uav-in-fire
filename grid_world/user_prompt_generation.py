@@ -22,27 +22,27 @@ def generate_location_content(csv_path):
 
 def input_prompt_1_func_total(dialogue_history_method, cen_decen_framework, area_resource_total, pos_update_prompt, response_total_list, num_drones):
     # 动态生成 UAV 标识
-    uav_identifiers = ', '.join([f'UAV{i}' for i in range(num_drones)])
+    uav_identifiers = ', '.join([f'agent{i}' for i in range(num_drones)])
     
     # 动态生成地点内容
     location_content = generate_location_content(csv_path)
     
     user_prompt_1 = f'''
-You are a coordinator in a distributed system responsible for managing {num_drones} UAVs responding to disaster sites. Your task is to efficiently guide them to specific locations where disasters have occurred. The map is a 1x1 coordinate grid with several known disaster sites, including: {location_content}. Each site requires immediate attention, and tasks must be completed within 30 minutes of the disaster occurring.
+You are a coordinator in a distributed system responsible for managing {num_drones} agents responding to disaster sites. Your task is to efficiently guide them to specific locations where disasters have occurred. The map is a 1x1 coordinate grid with several known disaster sites, including: {location_content}. Each site requires immediate attention, and tasks must be completed within 30 minutes of the disaster occurring.
 
-These UAVs are identified as {uav_identifiers}. The operation is denoted as: REACH ("Vezzani"), indicating that the UAV will move to the Vezzani region. Upon arrival, the UAV will perform necessary tasks to mitigate the disaster. Note that moving between locations takes time, and task completion must be efficient to meet the 30-minute deadline.
+These agents are identified as {uav_identifiers}. The operation is denoted as: REACH ("Vezzani"), indicating that the agent will move to the Vezzani region. Upon arrival, the agent will perform necessary tasks to mitigate the disaster. Note that moving between locations takes time, and task completion must be efficient to meet the 30-minute deadline.
 
 You should label the number of tasks remaining at each location and their urgency as follows: Location Info: {{{{ "Vezzani": 2, urgent; "Teghime": 1, urgent; .....}}}}.
-The status and location of each UAV are represented as: {{"UAV0": "Tolla" (idle)", "UAV1": "Aullene" (moving)", ...}}. If a UAV is not idle, no new task is assigned.
+The status and location of each agent are represented as: {{"Agent0": "Tolla" (idle)", "Agent1": "Aullene" (moving)", ...}}. If an agent is not idle, no new task is assigned.
 
-Your objective is to instruct these {num_drones} UAVs to move to designated locations to complete tasks as efficiently and effectively as possible. At the end of each turn, UAVs will provide an update for the next sequence of actions. Your role is to ensure optimal cooperation among the UAVs to maximize efficiency and meet the 30-minute deadline.
+Your objective is to instruct these {num_drones} agents to move to designated locations to complete tasks as efficiently and effectively as possible. At the end of each turn, agents will provide an update for the next sequence of actions. Your role is to ensure optimal cooperation among the agents to maximize efficiency and meet the 30-minute deadline.
 
 Learn from previous steps. Avoid mere repetition; understand why states change or cycles continue. Prevent getting stuck in action loops.
 
 Therefore, the current information for each location is: {area_resource_total}
-Each UAV's location is: {pos_update_prompt}
+Each agent's location is: {pos_update_prompt}
 
-Your answer should include only the specified action plan, not any other format, and no quotation marks: {{{{UAV0 : reach (xxx), UAV1 : reach (xxx), ...}}}}. If any UAV is not idle, use {{{{UAV0 : reach (xxx), UAV1 : reach (None), ...}}}} to indicate that the UAV is not idle and does not need to be assigned. The planned area of arrival should be included in the possible destinations for the UAV.
+Your answer should include only the specified action plan, not any other format, and no quotation marks: {{{{Agent0 : reach (xxx), Agent1 : reach (xxx), ...}}}}. If any agent is not idle, use {{{{Agent0 : reach (xxx), Agent1 : reach (None), ...}}}} to indicate that the agent is not idle and does not need to be assigned. The planned area of arrival should be included in the possible destinations for the agent.
 Now, plan your next step:
     '''
     token_num_count = len(enc.encode(user_prompt_1))
